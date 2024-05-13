@@ -1,4 +1,4 @@
-# Project with telegram bot and master-slave databases
+# Project with telegram bot and master-slave databases:
 
 1. `git clone -b docker https://github.com/LyricalPHM/devops_bot.git`  
 2. `cd devops_bot`  
@@ -8,7 +8,7 @@
 <br>
 <br>
 
-# Ansible project
+# Ansible project:
 
 1. `git clone -b ansible https://github.com/LyricalPHM/devops_bot.git`
 
