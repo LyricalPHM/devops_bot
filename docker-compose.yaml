@@ -1,0 +1,70 @@
+version: '3.8'
+
+x-postgres-common:
+  &postgres-common
+  build:
+    context: ./db
+  user: postgres
+  restart: always
+  healthcheck:
+    test: 'pg_isready -U postgres --dbname=my_database'
+    interval: 10s
+    timeout: 5s
+    retries: 5
+
+services:
+  bot:
+    build:
+      context: ./bot
+    environment:
+      - PYTHONUNBUFFERED=1
+    depends_on:
+      - postgres
+
+  postgres:
+    <<: *postgres-common
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: my_database
+      POSTGRES_HOST_AUTH_METHOD: "scram-sha-256\nhost replication all 0.0.0.0/0 md5"
+      POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    command: >
+      postgres
+      -c listen_addresses='*'
+      -c archive_mode=on
+      -c archive_command='cp %p /archive/%f'
+      -c max_wal_senders=10
+      -c wal_level=replica
+      -c wal_log_hints=on
+
+  postgres_replica:
+    build:
+      context: ./db_repl
+    ports:
+      - "5433:5432"
+    environment:
+      PGUSER: postgres
+      PGPASSWORD: postgres
+    command: |
+      bash -c "
+      rm -rf /var/lib/postgresql/data/*
+      until pg_basebackup --pgdata=/var/lib/postgresql/data -R --slot=replication_slot --host=postgres --port=5432
+      do
+      echo 'Waiting for primary to connect...'
+      sleep 1s
+      done
+      echo 'Backup done, starting replica...'
+      chown -R postgres:postgres /var/lib/postgresql/data
+      chmod 700 /var/lib/postgresql/data
+      su - postgres -c '/usr/lib/postgresql/16/bin/postgres -D /var/lib/postgresql/data'
+      "
+    depends_on:
+      - postgres
+
+volumes:
+  pg_data:
