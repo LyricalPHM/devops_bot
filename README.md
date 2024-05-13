@@ -5,7 +5,12 @@
 3. `cat README.md`  
 4. `docker-compose up -d`  
 
+<br>
+<br>
+<br>
+
 # Ansible project
 
 1. `git clone -b ansible https://github.com/LyricalPHM/devops_bot.git`
+
 
