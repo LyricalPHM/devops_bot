@@ -1,1 +1,1 @@
-# devops_bot
+# Docker project with telegram bot and master-slave databases
