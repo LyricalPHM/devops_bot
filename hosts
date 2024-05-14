@@ -3,8 +3,8 @@
 # иной то стоит выяснить какая версия latest у него. Для машин kali - 16 
 all:
   vars:
-    postgres_version: "15" 
-    postgres_version_2: "15"
+    postgres_version: "Версия устанавливаемого postgresql latest на Ваш дистрибутив master-server" 
+    postgres_version_2: "Версия устанавливаемого postgresql latest на Ваш дистрибутив slave-server"
     postgres_master_host: "Ваш адрес где будет развернут master-server postgresql"
     postgres_master_port: 5432
 
