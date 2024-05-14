@@ -201,10 +201,10 @@ def verify_password(update: Update, context: CallbackContext):
 
 # Функции для получения информации о системе
 def run_command_on_server(command):
-    host = os.getenv('HOST')
-    port = os.getenv('PORT')
-    username = os.getenv('USER')
-    password = os.getenv('PASSWORD')
+    host = os.getenv('HOST_SSH')
+    port = os.getenv('PORT_SSH')
+    username = os.getenv('USER_SSH')
+    password = os.getenv('PASSWORD_SSH')
     client = paramiko.SSHClient()
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     client.connect(hostname=host, username=username, password=password, port=port)
@@ -246,10 +246,10 @@ def getAptPackageCommand(update: Update, context: CallbackContext):
 
 def get_apt_input(update: Update, context: CallbackContext):
     package_name = update.message.text.strip()
-    host = os.getenv('HOST')
-    port = os.getenv('PORT')
-    username = os.getenv('USER')
-    password = os.getenv('PASSWORD')
+    host = os.getenv('HOST_SSH')
+    port = os.getenv('PORT_SSH')
+    username = os.getenv('USER_SSH')
+    password = os.getenv('PASSWORD_SSH')
     client = paramiko.SSHClient()
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     client.connect(hostname=host, username=username, password=password, port=port)
