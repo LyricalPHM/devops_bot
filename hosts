@@ -1,8 +1,10 @@
 # В полях "..." значения которые требуется заполнить (без кавычек)
+# Работа выполнялась на машинах debian - поэтому стоит указывать 15 версию postgresql - она ставится автоматически, если дистрибутив
+# иной то стоит выяснить какая версия latest у него. Для машин kali - 16 
 all:
   vars:
-    postgres_version: "Устанавливаемая версия postgresql на master-server" 
-    postgres_version_2: "Устанавливаемая версия postgresql на slave-server"
+    postgres_version: "15" 
+    postgres_version_2: "15"
     postgres_master_host: "Ваш адрес где будет развернут master-server postgresql"
     postgres_master_port: 5432
 
