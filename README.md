@@ -4,8 +4,9 @@
 2. `cd devops_bot`  
 3. `cat README.md`
 4. `cd bot`
-5. `nano .env`  
-6. `docker-compose up -d`  
+5. `nano .env`
+6. `cd ..`  
+7. `docker-compose up -d`  
 
 <br>
 <br>
