@@ -1,0 +1,26 @@
+# В полях "..." значения которые требуется заполнить (без кавычек)
+all:
+  vars:
+    postgres_version: "Устанавливаемая версия postgresql на master-server" 
+    postgres_version_2: "Устанавливаемая версия postgresql на slave-server"
+    postgres_master_host: "Ваш адрес где будет развернут master-server postgresql"
+    postgres_master_port: 5432
+
+  hosts:
+    host1:
+      ansible_host: "Ваш адрес где будет развернут master-server postgresql"
+      ansible_ssh_user: "Имя созданного для ansible пользователя для подключения по SSH"
+      ansible_ssh_pass: "Пароль созданного для ansible пользователя для подключения по SSH"
+      
+    host2:
+      ansible_host: "Ваш адрес где будет развернут slave-server postgresql"
+      ansible_ssh_user: "Имя созданного для ansible пользователя для подключения по SSH"
+      ansible_ssh_pass: "Пароль созданного для ansible пользователя для подключения по SSH"
+    
+    host3:
+      ansible_host: "Ваш адрес где будет развернут telegram бот"
+      ansible_ssh_user: "Имя созданного для ansible пользователя для подключения по SSH"
+      ansible_ssh_pass: "Пароль созданного для ansible пользователя для подключения по SSH"
+      
+
+
