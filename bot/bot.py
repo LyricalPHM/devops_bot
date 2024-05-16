@@ -40,8 +40,8 @@ def help(update: Update, context: CallbackContext):
                               '/get_apt_list - получение информации об установленных пакетах\n'
                               '/get_apt_input - получение информации об определенном пакете\n'
                               '/get_services - получение информации о запущенных сервисах\n'
-                              '/get_repl_logs_ANSIBLE - вывод логов о репликации базы данных в контейнере\n'
-                              '/get_repl_logs_DOCKER - вывод логов о репликации базы данных развернутой через Ansible\n'
+                              '/get_repl_logs_DOCKER - вывод логов о репликации базы данных в контейнере\n'
+                              '/get_repl_logs_ANSIBLE - вывод логов о репликации базы данных развернутой через Ansible\n'
                               '/get_emails - вывод email адресов из базы данных\n'
                               '/get_phone_numbers - вывод телефонных номеров из базы данных\n')
 
