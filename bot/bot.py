@@ -23,8 +23,7 @@ def start(update: Update, context: CallbackContext):
 
 # Обработчик команды /help
 def help(update: Update, context: CallbackContext):
-    update.message.reply_text('Этот бот может выполнять следующие задачи:\n'
-                              '/find_email - поиск email-адресов в тексте\n'
+    update.message.reply_text('/find_email - поиск email-адресов в тексте\n'
                               '/findPhoneNumbers - поиск номеров телефонов в тексте\n'
                               '/verify_password - проверка сложности пароля\n'
                               '/get_release - получение информации о релизе системы\n'
@@ -41,7 +40,8 @@ def help(update: Update, context: CallbackContext):
                               '/get_apt_list - получение информации об установленных пакетах\n'
                               '/get_apt_input - получение информации об определенном пакете\n'
                               '/get_services - получение информации о запущенных сервисах\n'
-                              '/get_repl_logs - вывод логов о репликации базы данных\n'
+                              '/get_repl_logs_ANSIBLE - вывод логов о репликации базы данных в контейнере\n'
+                              '/get_repl_logs_DOCKER - вывод логов о репликации базы данных развернутой через Ansible\n'
                               '/get_emails - вывод email адресов из базы данных\n'
                               '/get_phone_numbers - вывод телефонных номеров из базы данных\n')
 
@@ -106,6 +106,23 @@ def confirm_email(update: Update, context: CallbackContext):
     else:
         update.message.reply_text('Выберите один из вариантов: Да или Нет.')
     return ConversationHandler.END
+
+
+def send_repl_log(update, context):
+    log_file_path = '/var/log/repl.log'
+    if os.path.exists(log_file_path):
+        with open(log_file_path, 'r') as file:
+            lines = file.readlines()
+        filtered_lines = [line.strip() for line in lines if "repl" in line]
+        last_15_lines = filtered_lines[-15:]
+        log_content = '\n'.join(last_15_lines)
+        if log_content:
+            update.message.reply_text(log_content)
+        else:
+            update.message.reply_text("Логи репликации не найдены")
+    else:
+        update.message.reply_text("Файл журнала не найден.")
+
 
 # Функции для поиска номеров телефонов в тексте
 def findPhoneNumbersCommand(update: Update, context: CallbackContext):
@@ -229,7 +246,7 @@ def execute_command(update: Update, context: CallbackContext):
         'get_ss': 'ss -tuln',
         'get_apt_list': 'apt list --installed| head -n 15',
         'get_services': 'systemctl list-units --type=service| head -n 15',
-        'get_repl_logs': 'docker logs --tail 15 devops_bot_postgres_replica_1'
+        'get_repl_logs_ANSIBLE': 'tail -n 15 /var/log/postgresql/postgresql-15-main.log'
     }
 
     if command in commands_map:
@@ -340,7 +357,7 @@ def main():
         fallbacks=[]
     )
 
-
+    dispatcher.add_handler(CommandHandler("get_repl_logs_DOCKER", send_repl_log))
     dispatcher.add_handler(CommandHandler("start", start))
     dispatcher.add_handler(CommandHandler("help", help))
     dispatcher.add_handler(convHandlerFindEmailAddresses)
@@ -349,10 +366,11 @@ def main():
     dispatcher.add_handler(convHandlerVerifyPassword)
     dispatcher.add_handler(CommandHandler(['get_release', 'get_uname', 'get_uptime', 'get_df', 'get_free',
                                            'get_mpstat', 'get_w', 'get_auths', 'get_critical', 'get_ps',
-                                           'get_ss', 'get_apt_list', 'get_services', 'get_repl_logs'], execute_command))
+                                           'get_ss', 'get_apt_list', 'get_services', 'get_repl_logs_ANSIBLE'], execute_command))
     dispatcher.add_handler(CommandHandler(['get_emails', 'get_phone_numbers'], get_from_db))
     updater.start_polling()
     updater.idle()
 
 if __name__ == '__main__':
     main()
+
