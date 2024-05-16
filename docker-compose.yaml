@@ -18,6 +18,8 @@ services:
       context: ./bot
     environment:
       - PYTHONUNBUFFERED=1
+    volumes:
+      - logs:/var/log/
     depends_on:
       - postgres
 
@@ -33,6 +35,7 @@ services:
       POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256"
     volumes:
       - pg_data:/var/lib/postgresql/data
+      - logs:/var/log/
     command: >
       postgres
       -c listen_addresses='*'
@@ -41,7 +44,10 @@ services:
       -c max_wal_senders=10
       -c wal_level=replica
       -c wal_log_hints=on
-
+      -c log_directory='/var/log/'
+      -c log_filename='repl.log'
+      -c logging_collector=on
+      -c log_replication_commands=on
   postgres_replica:
     build:
       context: ./db_repl
@@ -68,3 +74,4 @@ services:
 
 volumes:
   pg_data:
+  logs:
