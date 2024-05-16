@@ -264,12 +264,6 @@
       command: wget https://raw.githubusercontent.com/LyricalPHM/devops_bot/docker/bot/bot.py -P /home/bot
       become: true
 
-    - name: Замена строки для корректного вывода логов о репликации
-      ansible.builtin.lineinfile:
-        path: /home/bot/bot.py
-        regexp: ^\s*'get_repl_logs'\s*:\s*'docker logs --tail 15 devops_bot_postgres_replica_1'\s*$
-        line: "        'get_repl_logs': 'tail -n 15 /var/log/postgresql/postgresql-15-main.log'"
-
     - name: Установка владельца, группы и прав для файла bot.py
       ansible.builtin.file:
         path: /home/bot/bot.py
