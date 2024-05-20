@@ -56,7 +56,7 @@
         databases: replication
         method: trust
         users: all
-        address: 192.168.56.122/32
+        address: "{{ DB_REPL_HOST }}/32"
         create: true
       become: true
       become_user: postgres
@@ -81,8 +81,8 @@
       become: true
       become_user: postgres
       postgresql_user:
-        name: replication
-        password: replication
+        name: "{{ DB_REPL_USER }}"
+        password: "{{ DB_REPL_PASSWORD }}"
         role_attr_flags: SUPERUSER,REPLICATION
         login_password: postgres
       become: true
@@ -90,22 +90,22 @@
 
     - name: Создание нового пользователя и установка пароля
       postgresql_user:
-        name: db_user
-        password: db_user 
+        name: "{{ DB_USER }}"
+        password: "{{ DB_PASSWORD }}"
         encrypted: yes
       become: true
       become_user: postgres
 
     - name: Создание базы данных для работы с ботом
       ansible.builtin.postgresql_db:
-        name: "my_database"
+        name: "{{ DB_DATABASE }}"
         state: present
       become: yes
       become_user: postgres
 
     - name: Создание таблицы email
       ansible.builtin.postgresql_query:
-        db: "my_database"
+        db: "{{ DB_DATABASE }}"
         query: |
           CREATE TABLE IF NOT EXISTS email (
             id SERIAL PRIMARY KEY,
@@ -116,7 +116,7 @@
 
     - name: Создание таблицы phone
       ansible.builtin.postgresql_query:
-        db: "my_database"
+        db: "{{ DB_DATABASE }}"
         query: |
           CREATE TABLE IF NOT EXISTS phone (
             id SERIAL PRIMARY KEY,
@@ -127,8 +127,8 @@
 
     - name: Предоставление доступа пользователю ко всем таблицам в базе данных cозданной для бота
       ansible.builtin.postgresql_privs:
-        database: my_database
-        role: db_user
+        database: "{{ DB_DATABASE }}"
+        role: "{{ DB_USER }}"
         obj: email,phone
         priv: ALL
         state: present
@@ -137,15 +137,15 @@
 
     - name: Предоставление доступа к последовательности phone_id_seq
       ansible.builtin.postgresql_query:
-        db: my_database
-        query: "GRANT USAGE, SELECT ON SEQUENCE phone_id_seq TO db_user;"
+        db: "{{ DB_DATABASE }}"
+        query: "GRANT USAGE, SELECT ON SEQUENCE phone_id_seq TO {{ DB_USER }};"
       become: yes
       become_user: postgres
 
     - name: Предоставление доступа к последовательности email_id_seq
       ansible.builtin.postgresql_query:
-        db: my_database
-        query: "GRANT USAGE, SELECT ON SEQUENCE email_id_seq TO db_user;"
+        db: "{{ DB_DATABASE }}"
+        query: "GRANT USAGE, SELECT ON SEQUENCE email_id_seq TO {{ DB_USER }};"
       become: yes
       become_user: postgres
 
@@ -160,6 +160,7 @@
         - "archive_mode = on"
         - "archive_command = 'cp %p /archive/%f'"
         - "listen_addresses = '*'"
+        - "log_replication_commands = on"
       become: true
       become_user: postgres
 
@@ -213,7 +214,7 @@
       become_user: postgres
       
     - name: Запуск репликации базы
-      command: pg_basebackup -v --pgdata=/var/lib/postgresql/{{ postgres_version_2 }}/main -R --slot=replication_slot --host={{ postgres_master_host }} --port={{ postgres_master_port }} -U replication -w -P
+      command: pg_basebackup -v --pgdata=/var/lib/postgresql/{{ postgres_version_2 }}/main -R --slot=replication_slot --host={{ postgres_master_host }} --port={{ postgres_master_port }} -U  {{DB_REPL_USER}} -w -P
       become: true
       become_user: postgres
 
@@ -272,22 +273,21 @@
         mode: '0755'
       become: true
 
-    - name: Копирование файла .env в директорию /home/bot
-      copy:
-        src: .env
-        dest: /home/bot/.env
-        force: yes
-        owner: ansible
-        group: ansible
-        mode: '0755'
-      become: true
-
     - name: Запуск файла bot.py в фоновом режиме
       shell: "nohup python3 bot.py > /dev/null 2>&1 &"
+      environment:
+        TOKEN: "{{TOKEN}}"
+        DB_HOST: "{{ DB_HOST }}"
+        DB_USER: "{{ DB_USER }}"
+        DB_PASSWORD: "{{ DB_PASSWORD }}"
+        DB_DATABASE: "{{ DB_DATABASE }}"
+        RM_HOST: "{{ RM_HOST }}"
+        RM_PORT: "{{ RM_PORT }}"
+        RM_USER: "{{ RM_USER }}"
+        RM_PASSWORD: "{{ RM_PASSWORD }}"
       args:
         chdir: /home/bot
       become: true
-
   
 
 
