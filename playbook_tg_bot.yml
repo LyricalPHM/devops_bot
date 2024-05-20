@@ -155,6 +155,7 @@
         line: "{{ item }}"
       loop:
         - "wal_level = replica"
+        - "port = {{DB_PORT}}"
         - "max_wal_senders = 10"
         - "wal_log_hints = on"
         - "archive_mode = on"
@@ -196,6 +197,7 @@
         path: /etc/postgresql/{{ postgres_version_2 }}/main/postgresql.conf
         line: "{{ item }}"
       loop:
+        - "port = {{DB_REPL_PORT}}"
         - "listen_addresses = 'localhost'"
       become: true
       become_user: postgres
