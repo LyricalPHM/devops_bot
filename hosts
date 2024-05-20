@@ -5,8 +5,6 @@ all:
   vars:
     postgres_version: "Latest версия устанавливаемого postgresql на Ваш дистрибутив master-server" 
     postgres_version_2: "Latest версия устанавливаемого postgresql на Ваш дистрибутив slave-server"
-    postgres_master_host: "Ваш адрес где будет развернут master-server postgresql"
-    postgres_master_port: 5432
 
     RM_HOST: "Ваш адрес где будет развернут master-server postgresql"
     RM_PORT: "порт подключения по SSH"
@@ -17,11 +15,13 @@ all:
     DB_USER: "Имя пользователя основной базы данных"
     DB_PASSWORD: "Пароль пользователя основной базы данных"
     DB_HOST: "Ваш адрес основной базы данных"
+    DB_PORT = "Порт для подключения к основной базе данных"
     DB_DATABASE: "Имя базы данных"
 
     DB_REPL_USER: "Имя пользователя созданного для репликации"
     DB_REPL_PASSWORD: "Пароль пользователя созданного для репликации"
     DB_REPL_HOST: "Адрес базы для репликации"
+    DB_REPL_PORT: "Порт для подключения к slave базе данных"
 
 
   hosts:
