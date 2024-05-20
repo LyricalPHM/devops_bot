@@ -245,7 +245,7 @@ def execute_command(update: Update, context: CallbackContext):
         'get_ps': 'ps aux | head -n 15',
         'get_ss': 'ss -tuln',
         'get_apt_list': 'apt list --installed| head -n 15',
-        'get_services': 'systemctl list-units --type=service| head -n 15',
+        'get_services': 'systemctl list-units --type=service | grep running | head -n 15',
         'get_repl_logs_ANSIBLE': 'tail -n 15 /var/log/postgresql/postgresql-15-main.log'
     }
 
