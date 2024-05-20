@@ -14,7 +14,6 @@
 2. `git clone -b ansible https://github.com/LyricalPHM/devops_bot.git`
 3. `cd devops_bot`
 4. `cat README.md`
-5. `nano hosts`
-6. `nano .env`
-7. `ansible-playbook playbook_tg_bot.yml`
+5. `nano inventory`
+6. `ansible-playbook playbook_tg_bot.yml`
 
