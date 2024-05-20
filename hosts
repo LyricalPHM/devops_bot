@@ -8,6 +8,22 @@ all:
     postgres_master_host: "Ваш адрес где будет развернут master-server postgresql"
     postgres_master_port: 5432
 
+    RM_HOST: "Ваш адрес где будет развернут master-server postgresql"
+    RM_PORT: "порт подключения по SSH"
+    RM_USER: "Имя пользователя"
+    RM_PASSWORD: "Пароль пользователя"
+    TOKEN: 6546423090: "Токен бота telegram"
+
+    DB_USER: "Имя пользователя основной базы данных"
+    DB_PASSWORD: "Пароль пользователя основной базы данных"
+    DB_HOST: "Ваш адрес основной базы данных"
+    DB_DATABASE: "Имя базы данных"
+
+    DB_REPL_USER: "Имя пользователя созданного для репликации"
+    DB_REPL_PASSWORD: "Пароль пользователя созданного для репликации"
+    DB_REPL_HOST: "Адрес базы для репликации"
+
+
   hosts:
     host1:
       ansible_host: "Ваш адрес где будет развернут master-server postgresql"
@@ -23,6 +39,7 @@ all:
       ansible_host: "Ваш адрес где будет развернут telegram бот"
       ansible_ssh_user: "Имя созданного для ansible пользователя для подключения по SSH"
       ansible_ssh_pass: "Пароль созданного для ansible пользователя для подключения по SSH"
+      
       
 
 
