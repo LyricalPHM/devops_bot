@@ -1,12 +1,9 @@
 # Docker project with telegram bot and master-slave pgsql databases:
 
 1. `git clone -b docker https://github.com/LyricalPHM/devops_bot.git`  
-2. `cd devops_bot`  
-3. `cat README.md`
-4. `cd bot`
-5. `nano .env`
-6. `cd ..`  
-7. `docker-compose up -d`  
+2. `cat README.md`
+3. `nano .env` 
+4. `docker-compose up -d`  
 
 <br>
 <br>
