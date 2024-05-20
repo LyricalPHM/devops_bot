@@ -78,11 +78,11 @@ def confirm_email(update: Update, context: CallbackContext):
             if email_addresses is not None:
                 connection = None
                 try:
-                    connection = psycopg2.connect(user=os.getenv('USER_BD'),
-                                                  password=os.getenv('PASSWORD_BD'),
-                                                  host=os.getenv('HOST_BD'),
-                                                  port=os.getenv('PORT_BD'),
-                                                  database=os.getenv('DB_DB'))
+                    connection = psycopg2.connect(user=os.getenv('DB_USER'),
+                                                  password=os.getenv('DB_PASSWORD'),
+                                                  host=os.getenv('DB_HOST'),
+                                                  port=os.getenv('DB_PORT'),
+                                                  database=os.getenv('DB_DATABASE'))
                     cursor = connection.cursor()
                     for email_address in email_addresses:
                         cursor.execute("INSERT INTO email (email) VALUES (%s);", (email_address,))
@@ -167,11 +167,11 @@ def confirm_phone(update: Update, context: CallbackContext):
             if phone_numbers is not None:
                 connection = None
                 try:
-                    connection = psycopg2.connect(user=os.getenv('USER_BD'),
-                                                  password=os.getenv('PASSWORD_BD'),
-                                                  host=os.getenv('HOST_BD'),
-                                                  port=os.getenv('PORT_BD'),
-                                                  database=os.getenv('DB_DB'))
+                    connection = psycopg2.connect(user=os.getenv('DB_USER'),
+                                                  password=os.getenv('DB_PASSWORD'),
+                                                  host=os.getenv('DB_HOST'),
+                                                  port=os.getenv('DB_PORT'),
+                                                  database=os.getenv('DB_DATABASE'))
                     cursor = connection.cursor()
                     for phone_number in phone_numbers:
                         normalized_number = normalize_phone(phone_number)
@@ -218,10 +218,10 @@ def verify_password(update: Update, context: CallbackContext):
 
 # Функции для получения информации о системе
 def run_command_on_server(command):
-    host = os.getenv('HOST_SSH')
-    port = os.getenv('PORT_SSH')
-    username = os.getenv('USER_SSH')
-    password = os.getenv('PASSWORD_SSH')
+    host = os.getenv('RM_HOST')
+    port = os.getenv('RM_PORT')
+    username = os.getenv('RM_USER')
+    password = os.getenv('RM_PASSWORD')
     client = paramiko.SSHClient()
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     client.connect(hostname=host, username=username, password=password, port=port)
@@ -245,7 +245,7 @@ def execute_command(update: Update, context: CallbackContext):
         'get_ps': 'ps aux | head -n 15',
         'get_ss': 'ss -tuln',
         'get_apt_list': 'apt list --installed| head -n 15',
-        'get_services': 'systemctl list-units --type=service | grep running | head -n 15',
+        'get_services': 'systemctl list-units --type=service| head -n 15',
         'get_repl_logs_ANSIBLE': 'tail -n 15 /var/log/postgresql/postgresql-15-main.log'
     }
 
@@ -263,10 +263,10 @@ def getAptPackageCommand(update: Update, context: CallbackContext):
 
 def get_apt_input(update: Update, context: CallbackContext):
     package_name = update.message.text.strip()
-    host = os.getenv('HOST_SSH')
-    port = os.getenv('PORT_SSH')
-    username = os.getenv('USER_SSH')
-    password = os.getenv('PASSWORD_SSH')
+    host = os.getenv('RM_HOST')
+    port = os.getenv('RM_PORT')
+    username = os.getenv('RM_USER')
+    password = os.getenv('RM_PASSWORD')
     client = paramiko.SSHClient()
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     client.connect(hostname=host, username=username, password=password, port=port)
@@ -290,11 +290,11 @@ def get_from_db(update: Update, context: CallbackContext):
             'get_phone_numbers': ('SELECT * FROM phone', 'номеров телефонов')
         }
         if command in commands_map:
-            connection = psycopg2.connect(user=os.getenv('USER_BD'),
-                                          password=os.getenv('PASSWORD_BD'),
-                                          host=os.getenv('HOST_BD'),
-                                          port=os.getenv('PORT_BD'),
-                                          database=os.getenv('DB_DB'))
+            connection = psycopg2.connect(user=os.getenv('DB_USER'),
+                                          password=os.getenv('DB_PASSWORD'),
+                                          host=os.getenv('DB_HOST'),
+                                          port=os.getenv('DB_PORT'),
+                                          database=os.getenv('DB_DATABASE'))
             cursor = connection.cursor()
             cursor.execute(commands_map[command][0])
             data = cursor.fetchall()
