@@ -214,7 +214,7 @@
       become_user: postgres
       
     - name: Запуск репликации базы
-      command: pg_basebackup -v --pgdata=/var/lib/postgresql/{{ postgres_version_2 }}/main -R --slot=replication_slot --host={{ postgres_master_host }} --port={{ postgres_master_port }} -U  {{DB_REPL_USER}} -w -P
+      command: pg_basebackup -v --pgdata=/var/lib/postgresql/{{ postgres_version_2 }}/main -R --slot=replication_slot --host={{ DB_HOST }} --port={{ DB_PORT }} -U {{DB_REPL_USER}} -w -P
       become: true
       become_user: postgres
 
